@@ -1,55 +1,82 @@
-# 🧩 Dreamine.MVVM.ViewModels
 
-`Dreamine.MVVM.ViewModels`는 Dreamine 프레임워크 기반 프로젝트에서  
-공통적으로 사용되는 ViewModel들을 분리/재사용 가능한 구조로 관리하기 위한 모듈입니다.
+# Dreamine.MVVM.ViewModels
 
-현재는 기능이 포함되어 있지 않으며,  
-향후 아래와 같은 ViewModel 컴포넌트들이 이곳에 배치될 예정입니다.
+Base ViewModel infrastructure for the Dreamine MVVM framework.
 
----
+This package provides the foundational components required to build ViewModels in applications that use the Dreamine MVVM architecture.
 
-## 📌 향후 포함 대상 (예정)
-
-- 공통 ViewModel (예: `DialogViewModel`, `BusyViewModel`)
-- 테스트/디자인 타임용 DummyViewModel
-- 기본 구조를 상속받는 상위 추상 ViewModel 템플릿
-- 상태 기반 ViewModel 컨벤션
+[➡️ 한국어 문서 보기](./README_ko.md)
 
 ---
 
-## 🧭 목적 및 방향성
+## Purpose
 
-> "ViewModel은 기능보다 구조로 먼저 분리돼야 한다."
+`Dreamine.MVVM.ViewModels` defines the base structures used when implementing ViewModels in the Dreamine ecosystem.
 
-- 장비별 또는 기능별 ViewModel을 독립 모듈로 관리
-- 오픈소스 컴포넌트와 연결되는 ViewModel도 별도 관리 가능
-- 디자인 타임 테스트 및 공유 목적의 기본 ViewModel 제공
+It serves as the core layer where ViewModel-related patterns and conventions are defined.
 
----
+Typical responsibilities include:
 
-## 📦 NuGet 배포 여부
-
-본 모듈은 NuGet 배포 대상이 아니며,  
-Dreamine 응용 프로젝트 또는 템플릿 구조 내에서만 사용될 수 있습니다.
+- base ViewModel abstractions
+- common MVVM patterns
+- integration with Dreamine commands and bindings
+- infrastructure for property notification
 
 ---
 
-## 📁 GitHub
+## Design Goals
 
-🔗 [https://github.com/CodeMaru-Dreamine/Dreamine.MVVM.ViewModels](https://github.com/CodeMaru-Dreamine/Dreamine.MVVM.ViewModels)
+The ViewModel layer follows the principles used across the Dreamine framework.
+
+Design objectives:
+
+- minimal dependencies
+- clear MVVM separation
+- lightweight base classes
+- compatibility with source generators and command systems
+
+The goal is to keep ViewModels simple while enabling powerful framework features.
 
 ---
 
-## 🖋️ 작성자 정보
+## Architecture Role
 
-- 작성자: Dreamine Core Team  
-- 소유자: minsujang  
-- 날짜: 2025년 5월 25일  
-- 상태: 구조 정렬 / 기능 없음  
-- 라이선스: MIT
+Within the Dreamine MVVM ecosystem this package represents the **ViewModel Layer**.
+
+```
+Dreamine.MVVM.Interfaces
+        ↑
+Dreamine.MVVM.Commands
+        ↑
+Dreamine.MVVM.ViewModels
+        ↑
+Application ViewModels
+```
+
+Application-level ViewModels typically inherit from classes defined in this package.
 
 ---
 
-📅 문서 작성일: 2025년 5월 25일  
-🤖 협력자: ChatGPT (GPT-4), 별명: 프레임워크 유혹자  
-✍️ 기록자 서명: 아키로그 드림
+## Installation
+
+```bash
+dotnet add package Dreamine.MVVM.ViewModels
+```
+
+Or add to the project file:
+
+```xml
+<PackageReference Include="Dreamine.MVVM.ViewModels" Version="1.0.0" />
+```
+
+---
+
+## Requirements
+
+- .NET 8.0
+
+---
+
+## License
+
+MIT License
