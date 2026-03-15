@@ -16,20 +16,12 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Copyright>© 2025 Dreamine Core Team. All rights reserved.</Copyright>
     <PackageProjectUrl>https://github.com/CodeMaru-Dreamine/Dreamine.MVVM.FullKit</PackageProjectUrl>
-    <Title>Dreamine.MVVM.ViewModels</Title>
-    <PackageIcon>icon.png</PackageIcon>
+    <Title>Dreamine.MVVM.ViewModels</Title>   
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\..\Document\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\.Templates\Dreamine.MVVM.Template\icon.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 </Project>
