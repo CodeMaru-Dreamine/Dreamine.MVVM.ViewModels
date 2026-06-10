@@ -38,15 +38,5 @@ namespace Dreamine.MVVM.ViewModels
             OnPropertyChanged(propertyName);
             return true;
         }
-
-        /// <summary>
-        /// RelayCommand의 CanExecuteChanged를 수동으로 트리거할 수 있도록 도와주는 확장 포인트입니다.
-        /// Source Generator가 필요 시 여기를 호출하도록 생성합니다.
-        /// </summary>
-        /// <param name="commandName">커맨드 이름</param>
-        protected virtual void OnCommandChanged(string commandName)
-        {
-            // 필요 시 커맨드 이름 기반으로 RaiseCanExecuteChanged 구현 가능
-        }
     }
 }

@@ -20,11 +20,11 @@ namespace Dreamine.MVVM.ViewModels
 		/// <param name="canExecute">실행 가능 여부 판단 메서드 (선택)</param>
 		public RelayCommand(Action execute, Func<bool>? canExecute = null)
 		{
-			/// <brief>Argument 검증</brief>
+			// Argument 검증
 			_execute = execute ?? throw new ArgumentNullException(nameof(execute));
 			_canExecute = canExecute;
 
-			/// <brief>생성 시점의 SynchronizationContext를 캡처하여 UI 스레드 마샬링에 사용</brief>
+			// 생성 시점의 SynchronizationContext를 캡처하여 UI 스레드 마샬링에 사용
 			_syncContext = SynchronizationContext.Current;
 		}
 
@@ -35,7 +35,7 @@ namespace Dreamine.MVVM.ViewModels
 		/// <returns>명령이 실행 가능한 경우 true, 그렇지 않으면 false</returns>
 		public bool CanExecute(object? parameter)
 		{
-			/// <brief>canExecute 미지정 시 항상 실행 가능</brief>
+			// canExecute 미지정 시 항상 실행 가능
 			return _canExecute?.Invoke() ?? true;
 		}
 
@@ -59,17 +59,17 @@ namespace Dreamine.MVVM.ViewModels
 		/// </summary>
 		public void RaiseCanExecuteChanged()
 		{
-			/// <brief>이벤트 핸들러가 없으면 빠른 종료</brief>
+			// 이벤트 핸들러가 없으면 빠른 종료
 			var handler = CanExecuteChanged;
 			if (handler is null)
 				return;
 
-			/// <brief>캡처한 컨텍스트가 있고 현재 컨텍스트가 다르면 Post로 UI 스레드 호출</brief>
+			// 캡처한 컨텍스트가 있고 현재 컨텍스트가 다르면 Post로 UI 스레드 호출
 			if (_syncContext != null && !ReferenceEquals(SynchronizationContext.Current, _syncContext))
 			{
 				_syncContext.Post(static state =>
 				{
-					/// <brief>state는 (RelayCommand, EventHandler) 튜플</brief>
+					// state는 (RelayCommand, EventHandler) 튜플
 					var tuple = ((RelayCommand cmd, EventHandler evt))state!;
 					tuple.evt.Invoke(tuple.cmd, EventArgs.Empty);
 				}, (this, handler));
@@ -77,7 +77,7 @@ namespace Dreamine.MVVM.ViewModels
 				return;
 			}
 
-			/// <brief>동일 컨텍스트(보통 UI)에서 즉시 호출</brief>
+			// 동일 컨텍스트(보통 UI)에서 즉시 호출
 			handler.Invoke(this, EventArgs.Empty);
 		}
 	}
@@ -100,11 +100,11 @@ namespace Dreamine.MVVM.ViewModels
 		/// <param name="canExecute">실행 가능 여부 판단 메서드 (선택)</param>
 		public RelayCommand(Action<T> execute, Func<T, bool>? canExecute = null)
 		{
-			/// <brief>Argument 검증</brief>
+			// Argument 검증
 			_execute = execute ?? throw new ArgumentNullException(nameof(execute));
 			_canExecute = canExecute;
 
-			/// <brief>생성 시점 SynchronizationContext 캡처</brief>
+			// 생성 시점 SynchronizationContext 캡처
 			_syncContext = SynchronizationContext.Current;
 		}
 
@@ -115,11 +115,11 @@ namespace Dreamine.MVVM.ViewModels
 		/// <returns>명령이 실행 가능하면 true, 그렇지 않으면 false</returns>
 		public bool CanExecute(object? parameter)
 		{
-			/// <brief>canExecute 미지정 시 항상 실행 가능</brief>
+			// canExecute 미지정 시 항상 실행 가능
 			if (_canExecute is null)
 				return true;
 
-			/// <brief>파라미터 변환 실패 시 실행 불가 처리(예외 대신 false)</brief>
+			// 파라미터 변환 실패 시 실행 불가 처리(예외 대신 false)
 			if (!TryGetParameter(parameter, out var value))
 				return false;
 
@@ -132,7 +132,7 @@ namespace Dreamine.MVVM.ViewModels
 		/// <param name="parameter">명령 실행에 전달된 파라미터. <typeparamref name="T"/>로 변환됩니다.</param>
 		public void Execute(object? parameter)
 		{
-			/// <brief>Execute는 예외를 숨기기보다, 안전 변환이 안되면 명확히 예외 처리</brief>
+			// Execute는 예외를 숨기기보다, 안전 변환이 안되면 명확히 예외 처리
 			if (!TryGetParameter(parameter, out var value))
 				throw new ArgumentException($"Command parameter is not assignable to {typeof(T).FullName}.", nameof(parameter));
 
@@ -151,17 +151,17 @@ namespace Dreamine.MVVM.ViewModels
 		/// </summary>
 		public void RaiseCanExecuteChanged()
 		{
-			/// <brief>핸들러 스냅샷</brief>
+			// 핸들러 스냅샷
 			var handler = CanExecuteChanged;
 			if (handler is null)
 				return;
 
-			/// <brief>다른 컨텍스트라면 Post로 이벤트 발생</brief>
+			// 다른 컨텍스트라면 Post로 이벤트 발생
 			if (_syncContext != null && !ReferenceEquals(SynchronizationContext.Current, _syncContext))
 			{
 				_syncContext.Post(static state =>
 				{
-					/// <brief>state는 (RelayCommand&lt;T&gt;, EventHandler) 튜플</brief>
+					// state는 (RelayCommand<T>, EventHandler) 튜플
 					var tuple = ((RelayCommand<T> cmd, EventHandler evt))state!;
 					tuple.evt.Invoke(tuple.cmd, EventArgs.Empty);
 				}, (this, handler));
@@ -180,29 +180,29 @@ namespace Dreamine.MVVM.ViewModels
 		/// <returns>변환 성공 시 true, 실패 시 false</returns>
 		private static bool TryGetParameter(object? parameter, out T value)
 		{
-			/// <brief>null 처리</brief>
+			// null 처리
 			if (parameter is null)
 			{
-				/// <brief>참조 타입 또는 Nullable이면 default 허용</brief>
+				// 참조 타입 또는 Nullable이면 default 허용
 				if (default(T) is null)
 				{
 					value = default!;
 					return true;
 				}
 
-				/// <brief>non-nullable value type은 null 불가</brief>
+				// non-nullable value type은 null 불가
 				value = default!;
 				return false;
 			}
 
-			/// <brief>이미 T면 그대로 사용</brief>
+			// 이미 T면 그대로 사용
 			if (parameter is T t)
 			{
 				value = t;
 				return true;
 			}
 
-			/// <brief>타입 불일치</brief>
+			// 타입 불일치
 			value = default!;
 			return false;
 		}
