@@ -45,7 +45,8 @@ namespace Dreamine.MVVM.ViewModels
 		/// <param name="parameter">명령 실행에 사용될 파라미터 (사용하지 않음)</param>
 		public void Execute(object? parameter)
 		{
-			_execute();
+			if (CanExecute(parameter))
+				_execute();
 		}
 
 		/// <summary>
@@ -132,7 +133,9 @@ namespace Dreamine.MVVM.ViewModels
 		/// <param name="parameter">명령 실행에 전달된 파라미터. <typeparamref name="T"/>로 변환됩니다.</param>
 		public void Execute(object? parameter)
 		{
-			// Execute는 예외를 숨기기보다, 안전 변환이 안되면 명확히 예외 처리
+			if (!CanExecute(parameter))
+				return;
+
 			if (!TryGetParameter(parameter, out var value))
 				throw new ArgumentException($"Command parameter is not assignable to {typeof(T).FullName}.", nameof(parameter));
 
