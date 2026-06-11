@@ -19,6 +19,7 @@ namespace Dreamine.MVVM.ViewModels
         /// 지정된 속성 이름으로 PropertyChanged 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="propertyName">속성 이름</param>
+        // null! is intentional: CallerMemberName always supplies the caller's member name at compile time.
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null!)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
