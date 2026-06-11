@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -64,7 +65,19 @@ namespace Dreamine.MVVM.ViewModels
             catch (Exception ex)
             {
                 _lastException = ex;
-                ExecutionFailed?.Invoke(this, ex);
+
+                var handler = ExecutionFailed;
+                if (handler is not null)
+                {
+                    handler.Invoke(this, ex);
+                }
+                else
+                {
+                    // No subscriber — emit a diagnostic trace so the exception is visible
+                    // in the Output window rather than silently disappearing.
+                    Debug.WriteLine(
+                        $"[AsyncRelayCommand] Unhandled exception (subscribe to ExecutionFailed to suppress this): {ex}");
+                }
             }
             finally
             {
