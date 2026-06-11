@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -12,8 +13,9 @@ namespace Dreamine.MVVM.ViewModels
     {
         private readonly Func<Task> _execute;
         private readonly Func<bool>? _canExecute;
-        private bool _isExecuting;
-        private Exception? _lastException;
+        // Interlocked: 0 = idle, 1 = executing. Prevents concurrent entry without lock.
+        private int _isExecuting;
+        private volatile Exception? _lastException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncRelayCommand"/> class.
@@ -42,21 +44,21 @@ namespace Dreamine.MVVM.ViewModels
         /// <inheritdoc />
         public bool CanExecute(object? parameter)
         {
-            return !_isExecuting && (_canExecute?.Invoke() ?? true);
+            return Volatile.Read(ref _isExecuting) == 0 && (_canExecute?.Invoke() ?? true);
         }
 
         /// <inheritdoc />
         public async void Execute(object? parameter)
         {
-            if (!CanExecute(parameter))
+            // Atomically claim execution slot; bail if already executing.
+            if (Interlocked.CompareExchange(ref _isExecuting, 1, 0) != 0)
             {
                 return;
             }
 
+            RaiseCanExecuteChanged();
             try
             {
-                _isExecuting = true;
-                RaiseCanExecuteChanged();
                 await _execute().ConfigureAwait(true);
             }
             catch (Exception ex)
@@ -66,7 +68,7 @@ namespace Dreamine.MVVM.ViewModels
             }
             finally
             {
-                _isExecuting = false;
+                Interlocked.Exchange(ref _isExecuting, 0);
                 RaiseCanExecuteChanged();
             }
         }
