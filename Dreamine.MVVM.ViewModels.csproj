@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 
 		<PackageId>Dreamine.MVVM.ViewModels</PackageId>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<Authors>Dreamine Core Team</Authors>
 		<Company>Dreamine</Company>
 		<Description>Reusable base ViewModel implementations and shared MVVM logic for Dreamine applications.</Description>
